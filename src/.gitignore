@@ -1,0 +1,14 @@
+# ডিপেন্ডেন্সি ফোল্ডার (এগুলো গিটহাবে দেওয়ার দরকার নেই)
+node_modules
+dist
+build
+
+# সিক্রেট ফাইল (এগুলো যেন কখনোই গিটহাবে না যায়)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# লগ ফাইল
+*.log
