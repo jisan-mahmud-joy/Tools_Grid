@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://jsforgetech.com/</loc>
+    <loc>https://tools-grid.vercel.app/</loc>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://jsforgetech.com/about</loc>
+    <loc>https://tools-grid.vercel.app/login</loc>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://jsforgetech.com/contact</loc>
+    <loc>https://tools-grid.vercel.app/signup</loc>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://jsforgetech.com/privacy-policy</loc>
+    <loc>https://tools-grid.vercel.app/about</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://tools-grid.vercel.app/contact</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://tools-grid.vercel.app/privacy-policy</loc>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://jsforgetech.com/terms</loc>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://jsforgetech.com/disclaimer</loc>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://jsforgetech.com/cookie-policy</loc>
+    <loc>https://tools-grid.vercel.app/terms</loc>
     <priority>0.5</priority>
   </url>
 
