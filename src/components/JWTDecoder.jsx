@@ -1,8 +1,15 @@
 import React, { useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
+
 
 const JWTDecoder = () => {
+  <Helmet>
+  <title>JSON Web Token (JWT) Decoder Online | ToolGrid</title>
+  <meta name="description" content="Decode and inspect JSON Web Tokens (JWT) easily. Our free online JWT decoder helps you debug and verify your tokens in a clean and readable format." />
+</Helmet>
   const [token, setToken] = useState("");
   const [header, setHeader] = useState(null);
   const [payload, setPayload] = useState(null);

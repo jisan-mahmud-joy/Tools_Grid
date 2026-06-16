@@ -7,8 +7,15 @@ import { AppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 
 const PasswordStrengthChecker = () => {
+  <Helmet>
+  <title>Password Strength Checker & Validator | ToolGrid</title>
+  <meta name="description" content="Check the strength and security of your passwords in real-time. Our free online password strength checker helps you create safer credentials for your accounts." />
+</Helmet>
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
+  import { Helmet } from "react-helmet";
+
+
 
   const {
     user,

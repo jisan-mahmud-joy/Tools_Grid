@@ -1,8 +1,13 @@
 import React, { useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
 
 const WhoisLookup = () => {
+  <Helmet>
+  <title>Free WHOIS Lookup Domain Tool | ToolGrid</title>
+  <meta name="description" content="Get detailed domain registration information instantly. Use our free online WHOIS lookup tool to find ownership, expiration, and registrar details for any domain." />
+</Helmet>
   const [domain, setDomain] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);

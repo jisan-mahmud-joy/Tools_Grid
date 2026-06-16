@@ -1,8 +1,15 @@
 import React, { useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
+
 
 const IPLookup = () => {
+  <Helmet>
+  <title>IP Address Lookup & Location Tracker | ToolGrid</title>
+  <meta name="description" content="Track IP address locations and details instantly. Our free online IP lookup tool provides accurate geographical information and ISP details for any IP address." />
+</Helmet>
 const [ip, setIp] = useState("");
 const [data, setData] = useState(null);
 const [loading, setLoading] = useState(false);

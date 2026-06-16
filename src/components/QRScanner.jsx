@@ -7,8 +7,15 @@ import jsQR from "jsqr";
 import toast from "react-hot-toast";
 
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
+
 
 const QRScanner = () => {
+  <Helmet>
+  <title>Online QR Code Scanner & Reader | ToolGrid</title>
+  <meta name="description" content="Scan QR codes directly from your browser. Our free online QR scanner is fast, reliable, and helps you decode QR information instantly without any installation." />
+</Helmet>
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 

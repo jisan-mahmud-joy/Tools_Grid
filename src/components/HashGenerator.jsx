@@ -2,8 +2,15 @@ import React, { useState, useContext } from "react";
 import CryptoJS from "crypto-js";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
+
 
 const HashGenerator = () => {
+  <Helmet>
+  <title>Secure Hash Generator (MD5, SHA-256) | ToolGrid</title>
+  <meta name="description" content="Generate secure hashes for your data instantly. Support for MD5, SHA-1, SHA-256, and more. Our free online hash generator ensures fast and accurate encryption." />
+</Helmet>
 const [text, setText] = useState("");
 const [hashAlgo, setHashAlgo] = useState("SHA256");
 const [result, setResult] = useState("");

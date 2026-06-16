@@ -4,8 +4,15 @@ import React, {
 } from "react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
+
 
 const DuplicateRemover = () => {
+  <Helmet>
+  <title>Free Online Duplicate Remover Tool | ToolGrid</title>
+  <meta name="description" content="Easily remove duplicate lines from your text or list. Clean up your data quickly with our free online duplicate remover tool, designed for efficiency and accuracy." />
+</Helmet>
   const [text, setText] = useState("");
   const [result, setResult] =
     useState("");

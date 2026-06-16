@@ -5,8 +5,15 @@ import React, {
 
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
+
 
 const PasswordGenerator = () => {
+  <Helmet>
+  <title>Strong Password Generator - Secure Tool | ToolGrid</title>
+  <meta name="description" content="Generate strong, secure, and random passwords instantly. Customize your security settings to create passwords that keep your accounts safe and protected." />
+</Helmet>
   const [length, setLength] = useState(16);
   const [includeUppercase, setIncludeUppercase] =
     useState(true);

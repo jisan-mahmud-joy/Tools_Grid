@@ -1,8 +1,14 @@
 import React, { useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
 
 const FindAndReplace = () => {
+  <Helmet>
+  <title>Online Find and Replace Text Tool | ToolGrid</title>
+  <meta name="description" content="Quickly find and replace specific text within your document. Our free online find and replace tool helps you edit large amounts of text in seconds." />
+</Helmet>
 const [text, setText] = useState("");
 const [findWord, setFindWord] = useState("");
 const [replaceWord, setReplaceWord] = useState("");

@@ -1,8 +1,15 @@
 import React, { useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
+
 
 const FaviconGenerator = () => {
+  <Helmet>
+  <title>Create Favicon Online - Free Generator | ToolGrid</title>
+  <meta name="description" content="Convert your images into high-quality favicon files for your website. Use our free online favicon generator to create icons that look great in every browser." />
+</Helmet>
   const [imageSrc, setImageSrc] = useState(null);
   const [loading, setLoading] = useState(false);
 

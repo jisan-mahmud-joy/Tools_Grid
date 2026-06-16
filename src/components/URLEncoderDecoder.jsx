@@ -1,8 +1,15 @@
 import React, { useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
+
 
 const URLEncoderDecoder = () => {
+  <Helmet>
+  <title>URL Encoder & Decoder Tool - Online | ToolGrid</title>
+  <meta name="description" content="Safely encode and decode URL strings to ensure they are web-friendly. Use our free online URL encoder/decoder tool for quick and accurate results." />
+</Helmet>
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
 

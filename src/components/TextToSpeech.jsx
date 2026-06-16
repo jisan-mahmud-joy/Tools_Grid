@@ -6,8 +6,15 @@ import React, {
 
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
+
 
 const TextToSpeech = () => {
+  <Helmet>
+  <title>Online Text to Speech Converter | ToolGrid</title>
+  <meta name="description" content="Convert your text to natural-sounding speech instantly. Our free online text-to-speech tool is perfect for accessibility, reading aloud, and content creation." />
+</Helmet>
   const [text, setText] = useState("");
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] =

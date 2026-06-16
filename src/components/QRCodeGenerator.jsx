@@ -2,8 +2,14 @@ import React, { useState, useContext } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
+import { Helmet } from "react-helmet";
+
 
 const QRCodeGenerator = () => {
+  <Helmet>
+        <title>Free QR Code Generator - Quick & Easy | ToolGrid</title>
+        <meta name="description" content="Generate custom QR codes for URLs, text, and contacts instantly with ToolGrid's free online QR code generator. Easy, fast, and no registration required." />
+      </Helmet>
   const [text, setText] = useState("");
   const [size, setSize] = useState(250);
   const [fgColor, setFgColor] = useState("#000000");
