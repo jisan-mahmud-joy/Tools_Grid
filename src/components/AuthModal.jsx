@@ -20,6 +20,7 @@ const AuthModal = ({ initialMode = 'login', onClose }) => {
 
     try {
       // LOGIN
+      
       if (mode === 'login') {
         // এখানে await যোগ করা হয়েছে ব্যাকএন্ড রেসপন্স নিশ্চিত করার জন্য
         const res = await login(email, password);

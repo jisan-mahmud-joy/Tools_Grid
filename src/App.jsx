@@ -105,17 +105,15 @@ return ( <div className="min-h-screen bg-[#030712] text-white flex">
         <PageTransition key={location.pathname}>
           <Routes location={location}>
 
+            {/* Dashboard */}
+            <Route
+              path="/"
+              element={<Dashboard />}
+            />
             <Route
               path="/"
               element={<Home/>}
             />
-
-            {/* Dashboard */}
-            <Route
-              path="/Dashboard"
-              element={<Dashboard />}
-            />
-            
 
             {/* Auth */}
             <Route
