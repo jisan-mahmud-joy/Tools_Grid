@@ -32,6 +32,7 @@ import QRScanner from "./components/QRScanner";
 import TextToSpeech from "./components/TextToSpeech";
 import URLEncoderDecoder from "./components/URLEncoderDecoder";
 import WhoisLookup from "./components/WhoisLookup";
+import Home from "./components/Home";
 
 import AIPopup from "./components/AIPopup";
 import CommandPalette from "./components/CommandPalette";
@@ -108,6 +109,10 @@ return ( <div className="min-h-screen bg-[#030712] text-white flex">
             <Route
               path="/"
               element={<Dashboard />}
+            />
+            <Route
+              path="/"
+              element={<Home/>}
             />
 
             {/* Auth */}
