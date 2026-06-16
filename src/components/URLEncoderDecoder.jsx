@@ -6,10 +6,6 @@ import { Helmet } from "react-helmet";
 
 
 const URLEncoderDecoder = () => {
-  <Helmet>
-  <title>URL Encoder & Decoder Tool - Online | ToolGrid</title>
-  <meta name="description" content="Safely encode and decode URL strings to ensure they are web-friendly. Use our free online URL encoder/decoder tool for quick and accurate results." />
-</Helmet>
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
 
@@ -81,6 +77,11 @@ const URLEncoderDecoder = () => {
 
   return (
     <div className="max-w-4xl mx-auto bg-slate-900/40 border border-white/5 p-6 rounded-2xl">
+      
+  <Helmet>
+  <title>URL Encoder & Decoder Tool - Online | ToolGrid</title>
+  <meta name="description" content="Safely encode and decode URL strings to ensure they are web-friendly. Use our free online URL encoder/decoder tool for quick and accurate results." />
+</Helmet>
 
       <h2 className="text-xl font-bold text-amber-400 mb-6">
         URL Encoder / Decoder

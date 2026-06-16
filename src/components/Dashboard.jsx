@@ -99,66 +99,79 @@ useEffect(() => {
       name: "Duplicate Remover",
       path: "/duplicate-remover",
       icon: "🧹",
+      desc: "Clean up your data by removing duplicate lines."
     },
     {
       name: "Favicon Generator",
       path: "/favicon-generator",
       icon: "🖼️",
+      desc: "Generate professional favicons from images."
     },
     {
       name: "Find & Replace",
       path: "/find-and-replace",
       icon: "🔍",
+      desc: "Search and replace text in large content."
     },
     {
       name: "Hash Generator",
       path: "/hash-generator",
       icon: "#️⃣",
+      desc: "Generate MD5, SHA-1, SHA-256 hashes."
     },
     {
       name: "IP Lookup",
       path: "/ip-lookup",
       icon: "🌐",
+      desc: "Track IP location and network details."
     },
     {
       name: "JWT Decoder",
       path: "/jwt-decoder",
       icon: "🔐",
+      desc: "Decode and inspect JSON Web Tokens."
     },
     {
       name: "Password Generator",
       path: "/password-generator",
       icon: "🔑",
+      desc: "Create secure, random passwords easily."
     },
     {
       name: "Password Strength",
       path: "/password-strength",
       icon: "🛡️",
+      desc: "Test your password security strength." 
     },
     {
       name: "QR Generator",
       path: "/qr-code-generator",
       icon: "⚡",
+      desc: "Generate custom QR codes for your URLs."
     },
     {
       name: "QR Scanner",
       path: "/qr-scanner",
       icon: "📷",
+      esc: "Scan and decode QR codes instantly." 
     },
     {
       name: "Text To Speech",
       path: "/text-to-speech",
       icon: "🎤",
+      desc: "Convert your written text into audio."
     },
     {
       name: "URL Encoder/Decoder",
       path: "/url-encoder-decoder",
       icon: "🔗",
+      desc: "Encode or decode web-safe URLs."
     },
     {
       name: "Whois Lookup",
       path: "/whois-lookup",
       icon: "🌍",
+      desc: "Check domain registration information."
     },
   ];
 
@@ -391,7 +404,7 @@ useEffect(() => {
               </h2>
 
               <p className="text-xs text-slate-400 mt-2">
-                Login করলে Unlimited Tool Access পাবেন।
+                Log in to get unlimited tools access.
               </p>
 
             </div>

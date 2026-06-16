@@ -11,10 +11,7 @@ import { Helmet } from "react-helmet";
 
 
 const TextToSpeech = () => {
-  <Helmet>
-  <title>Online Text to Speech Converter | ToolGrid</title>
-  <meta name="description" content="Convert your text to natural-sounding speech instantly. Our free online text-to-speech tool is perfect for accessibility, reading aloud, and content creation." />
-</Helmet>
+  
   const [text, setText] = useState("");
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] =
@@ -52,6 +49,7 @@ const TextToSpeech = () => {
       loadVoices;
 
     return () => {
+      
       speechSynthesis.cancel();
     };
   }, [selectedVoice]);
@@ -115,6 +113,10 @@ const TextToSpeech = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-slate-900 rounded-xl">
+      <Helmet>
+  <title>Online Text to Speech Converter | ToolGrid</title>
+  <meta name="description" content="Convert your text to natural-sounding speech instantly. Our free online text-to-speech tool is perfect for accessibility, reading aloud, and content creation." />
+</Helmet>
 
       <h2 className="text-2xl font-bold mb-4 text-amber-400">
         Text To Speech

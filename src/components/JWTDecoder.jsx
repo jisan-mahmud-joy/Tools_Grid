@@ -6,10 +6,6 @@ import { Helmet } from "react-helmet";
 
 
 const JWTDecoder = () => {
-  <Helmet>
-  <title>JSON Web Token (JWT) Decoder Online | ToolGrid</title>
-  <meta name="description" content="Decode and inspect JSON Web Tokens (JWT) easily. Our free online JWT decoder helps you debug and verify your tokens in a clean and readable format." />
-</Helmet>
   const [token, setToken] = useState("");
   const [header, setHeader] = useState(null);
   const [payload, setPayload] = useState(null);
@@ -96,6 +92,11 @@ const JWTDecoder = () => {
 
   return (
     <div className="max-w-5xl mx-auto bg-slate-900/40 backdrop-blur-md border border-white/5 p-6 rounded-2xl shadow-xl">
+      
+  <Helmet>
+  <title>JSON Web Token (JWT) Decoder Online | ToolGrid</title>
+  <meta name="description" content="Decode and inspect JSON Web Tokens (JWT) easily. Our free online JWT decoder helps you debug and verify your tokens in a clean and readable format." />
+</Helmet>
 
       <div className="mb-6">
         <h2 className="text-xl font-bold text-rose-400">

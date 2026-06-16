@@ -6,10 +6,6 @@ import { Helmet } from "react-helmet";
 
 
 const QRCodeGenerator = () => {
-  <Helmet>
-        <title>Free QR Code Generator - Quick & Easy | ToolGrid</title>
-        <meta name="description" content="Generate custom QR codes for URLs, text, and contacts instantly with ToolGrid's free online QR code generator. Easy, fast, and no registration required." />
-      </Helmet>
   const [text, setText] = useState("");
   const [size, setSize] = useState(250);
   const [fgColor, setFgColor] = useState("#000000");
@@ -112,6 +108,11 @@ const QRCodeGenerator = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 rounded-2xl bg-slate-900/40 border border-white/5">
+      
+  <Helmet>
+        <title>Free QR Code Generator - Quick & Easy | ToolGrid</title>
+        <meta name="description" content="Generate custom QR codes for URLs, text, and contacts instantly with ToolGrid's free online QR code generator. Easy, fast, and no registration required." />
+      </Helmet>
 
       <h2 className="text-2xl font-bold text-amber-400 mb-2">
         QR Code Generator

@@ -10,10 +10,6 @@ import { Helmet } from "react-helmet";
 
 
 const PasswordGenerator = () => {
-  <Helmet>
-  <title>Strong Password Generator - Secure Tool | ToolGrid</title>
-  <meta name="description" content="Generate strong, secure, and random passwords instantly. Customize your security settings to create passwords that keep your accounts safe and protected." />
-</Helmet>
   const [length, setLength] = useState(16);
   const [includeUppercase, setIncludeUppercase] =
     useState(true);
@@ -121,6 +117,11 @@ const PasswordGenerator = () => {
 
   return (
     <div className="max-w-3xl mx-auto bg-slate-900/40 backdrop-blur-md border border-white/5 p-6 rounded-2xl shadow-xl">
+      
+  <Helmet>
+  <title>Strong Password Generator - Secure Tool | ToolGrid</title>
+  <meta name="description" content="Generate strong, secure, and random passwords instantly. Customize your security settings to create passwords that keep your accounts safe and protected." />
+</Helmet>
 
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-rose-400">

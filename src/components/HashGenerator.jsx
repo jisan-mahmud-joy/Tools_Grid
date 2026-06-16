@@ -7,10 +7,7 @@ import { Helmet } from "react-helmet";
 
 
 const HashGenerator = () => {
-  <Helmet>
-  <title>Secure Hash Generator (MD5, SHA-256) | ToolGrid</title>
-  <meta name="description" content="Generate secure hashes for your data instantly. Support for MD5, SHA-1, SHA-256, and more. Our free online hash generator ensures fast and accurate encryption." />
-</Helmet>
+ 
 const [text, setText] = useState("");
 const [hashAlgo, setHashAlgo] = useState("SHA256");
 const [result, setResult] = useState("");
@@ -132,7 +129,12 @@ toast.success("Cleared 🧹");
 
 };
 
-return ( <div className="max-w-4xl mx-auto p-6"> <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl">
+return (
+   <div className="max-w-4xl mx-auto p-6"> <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl">
+     <Helmet>
+  <title>Secure Hash Generator (MD5, SHA-256) | ToolGrid</title>
+  <meta name="description" content="Generate secure hashes for your data instantly. Support for MD5, SHA-1, SHA-256, and more. Our free online hash generator ensures fast and accurate encryption." />
+</Helmet>
 
 
     <div className="mb-6">

@@ -9,10 +9,7 @@ import { Helmet } from "react-helmet";
 
 
 const DuplicateRemover = () => {
-  <Helmet>
-  <title>Free Online Duplicate Remover Tool | ToolGrid</title>
-  <meta name="description" content="Easily remove duplicate lines from your text or list. Clean up your data quickly with our free online duplicate remover tool, designed for efficiency and accuracy." />
-</Helmet>
+  
   const [text, setText] = useState("");
   const [result, setResult] =
     useState("");
@@ -191,6 +188,10 @@ const DuplicateRemover = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6">
+      <Helmet>
+  <title>Free Online Duplicate Remover Tool | ToolGrid</title>
+  <meta name="description" content="Easily remove duplicate lines from your text or list. Clean up your data quickly with our free online duplicate remover tool, designed for efficiency and accuracy." />
+</Helmet>
       <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl">
 
         {/* Header */}

@@ -12,10 +12,6 @@ import { Helmet } from "react-helmet";
 
 
 const QRScanner = () => {
-  <Helmet>
-  <title>Online QR Code Scanner & Reader | ToolGrid</title>
-  <meta name="description" content="Scan QR codes directly from your browser. Our free online QR scanner is fast, reliable, and helps you decode QR information instantly without any installation." />
-</Helmet>
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -121,6 +117,11 @@ const QRScanner = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6 rounded-2xl bg-slate-900/40 border border-white/5">
+      
+  <Helmet>
+  <title>Online QR Code Scanner & Reader | ToolGrid</title>
+  <meta name="description" content="Scan QR codes directly from your browser. Our free online QR scanner is fast, reliable, and helps you decode QR information instantly without any installation." />
+</Helmet>
 
       <h2 className="text-2xl font-bold text-amber-400 mb-2">
         QR Code Scanner

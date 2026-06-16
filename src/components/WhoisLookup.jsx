@@ -4,10 +4,6 @@ import { AppContext } from "../context/AppContext";
 import { Helmet } from "react-helmet";
 
 const WhoisLookup = () => {
-  <Helmet>
-  <title>Free WHOIS Lookup Domain Tool | ToolGrid</title>
-  <meta name="description" content="Get detailed domain registration information instantly. Use our free online WHOIS lookup tool to find ownership, expiration, and registrar details for any domain." />
-</Helmet>
   const [domain, setDomain] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -71,6 +67,11 @@ const WhoisLookup = () => {
 
   return (
     <div className="max-w-3xl mx-auto bg-slate-900/40 p-6 rounded-2xl border border-white/10">
+      
+  <Helmet>
+  <title>Free WHOIS Lookup Domain Tool | ToolGrid</title>
+  <meta name="description" content="Get detailed domain registration information instantly. Use our free online WHOIS lookup tool to find ownership, expiration, and registrar details for any domain." />
+</Helmet>
 
       <h2 className="text-2xl font-bold text-amber-400 mb-2">
         Domain WHOIS Lookup

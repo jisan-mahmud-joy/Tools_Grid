@@ -6,10 +6,6 @@ import { Helmet } from "react-helmet";
 
 
 const IPLookup = () => {
-  <Helmet>
-  <title>IP Address Lookup & Location Tracker | ToolGrid</title>
-  <meta name="description" content="Track IP address locations and details instantly. Our free online IP lookup tool provides accurate geographical information and ISP details for any IP address." />
-</Helmet>
 const [ip, setIp] = useState("");
 const [data, setData] = useState(null);
 const [loading, setLoading] = useState(false);
@@ -55,7 +51,7 @@ try {
 }
 
 setLoading(false);
-```
+
 
 };
 
@@ -63,7 +59,7 @@ const handleCopy = async () => {
 if (!data) return;
 
 
-const info = 
+const info = `
 
 
 IP: ${data.ip}
@@ -76,9 +72,9 @@ Domain: ${data.connection?.domain}
 Timezone: ${data.timezone?.id}
 Latitude: ${data.latitude}
 Longitude: ${data.longitude}
-;
+`;
 
-```
+
 await navigator.clipboard.writeText(info);
 
 toast.success(
@@ -93,7 +89,13 @@ setIp("");
 setData(null);
 };
 
-return ( <div className="max-w-4xl mx-auto bg-slate-900/40 backdrop-blur-md border border-white/5 p-6 rounded-2xl shadow-xl">
+return ( 
+  <div className="max-w-4xl mx-auto bg-slate-900/40 backdrop-blur-md border border-white/5 p-6 rounded-2xl shadow-xl">
+    
+  <Helmet>
+  <title>IP Address Lookup & Location Tracker | ToolGrid</title>
+  <meta name="description" content="Track IP address locations and details instantly. Our free online IP lookup tool provides accurate geographical information and ISP details for any IP address." />
+</Helmet>
 
 
   <div className="mb-6">

@@ -5,10 +5,7 @@ import { Helmet } from "react-helmet";
 
 
 const FindAndReplace = () => {
-  <Helmet>
-  <title>Online Find and Replace Text Tool | ToolGrid</title>
-  <meta name="description" content="Quickly find and replace specific text within your document. Our free online find and replace tool helps you edit large amounts of text in seconds." />
-</Helmet>
+  
 const [text, setText] = useState("");
 const [findWord, setFindWord] = useState("");
 const [replaceWord, setReplaceWord] = useState("");
@@ -117,7 +114,7 @@ try {
 } catch {
   toast.error("Copy failed");
 }
-```
+
 
 };
 
@@ -129,7 +126,7 @@ toast.error(
 return;
 }
 
-```
+
 const blob = new Blob(
   [text],
   {
@@ -177,7 +174,12 @@ toast.success(
 
 };
 
-return ( <div className="max-w-5xl mx-auto p-6">
+return ( 
+  <div className="max-w-5xl mx-auto p-6">
+    <Helmet>
+  <title>Online Find and Replace Text Tool | ToolGrid</title>
+  <meta name="description" content="Quickly find and replace specific text within your document. Our free online find and replace tool helps you edit large amounts of text in seconds." />
+</Helmet>
 
 
   <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl">
