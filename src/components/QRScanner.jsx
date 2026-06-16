@@ -7,8 +7,7 @@ import jsQR from "jsqr";
 import toast from "react-hot-toast";
 
 import { AppContext } from "../context/AppContext";
-import { Helmet } from "react-helmet";
-
+import { Helmet } from "react-helmet-async";
 
 
 const QRScanner = () => {

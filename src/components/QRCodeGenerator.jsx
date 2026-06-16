@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 const QRCodeGenerator = () => {

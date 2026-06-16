@@ -4,7 +4,7 @@ import React, {
 } from "react";
 
 import { AppContext } from "../context/AppContext";
-import toast from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 const PasswordStrengthChecker = () => {
   const [password, setPassword] = useState("");

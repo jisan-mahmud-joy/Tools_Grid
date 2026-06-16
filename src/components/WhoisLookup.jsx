@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const WhoisLookup = () => {
   const [domain, setDomain] = useState("");

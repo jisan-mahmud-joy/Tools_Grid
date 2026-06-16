@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import CryptoJS from "crypto-js";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 
