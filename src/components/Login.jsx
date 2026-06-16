@@ -56,7 +56,7 @@ const Login = () => {
             <label className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Email Address</label>
             <input
               type="email"
-              placeholder="jisan@example.com"
+              placeholder="Enter Your Email.."
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-slate-200 outline-none focus:border-emerald-500/50 transition font-mono"
