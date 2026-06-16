@@ -5,9 +5,7 @@ import { AppContext } from "../context/AppContext";
 const PasswordStrengthChecker = () => {
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
-  import { Helmet } from "react-helmet";
-
-
+ 
 
   const {
     user,
