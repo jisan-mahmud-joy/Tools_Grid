@@ -195,7 +195,7 @@ const Footer = () => {
             </div>
 
             <div className="mt-6 space-y-2 text-sm text-slate-400">
-              <p>📧 support@jsforgetech.com</p>
+              <p>📧 jsforgetechnologysupport@gmail.com</p>
               <p>🌍 Dhaka, Bangladesh</p>
               <p>🕒 24/7 Online Support</p>
             </div>
