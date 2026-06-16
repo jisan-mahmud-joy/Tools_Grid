@@ -1,9 +1,5 @@
-import { Helmet } from "react-helmet-async";
-import React, {
-  useState,
-  useContext,
-} from "react";
-
+import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 import { AppContext } from "../context/AppContext";
 
 const PasswordStrengthChecker = () => {
