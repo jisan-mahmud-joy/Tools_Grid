@@ -54,28 +54,21 @@ const Footer = () => {
             <div className="flex gap-4 mt-6">
 
               <a
-                href="#"
+                href="https://www.facebook.com/share/1boxUuFsgY/"
                 className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-cyan-500/20 transition"
               >
                 <FaFacebook />
               </a>
 
               <a
-                href="#"
-                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-cyan-500/20 transition"
-              >
-                <FaGithub />
-              </a>
-
-              <a
-                href="#"
+                href="https://www.linkedin.com/in/support-js-forge-technology-a63186417?trk=contact-info"
                 className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-cyan-500/20 transition"
               >
                 <FaLinkedin />
               </a>
 
               <a
-                href="#"
+                href="https://www.youtube.com/@JSForgeTechnology"
                 className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-red-500/20 transition"
               >
                 <FaYoutube />
