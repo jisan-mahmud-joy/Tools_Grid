@@ -201,11 +201,11 @@ const Footer = () => {
                 </li>
               <li>
                 <Link
-                  to="/ URL-Encoder"
-                  className="hover:text-cyan-400"
+                   to="/url-encoder-decoder"
+                   className="hover:text-cyan-400"
                 >
-                  URL Encoder
-                </Link>
+                   URL Encoder
+              </Link>
                 </li>
              
 
