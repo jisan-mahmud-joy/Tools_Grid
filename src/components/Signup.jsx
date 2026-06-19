@@ -1,41 +1,76 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
+
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+
+import { auth } from "../firebase";
 
 const Signup = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!formData.name || !formData.email || !formData.password) {
-      toast.error('সবগুলো ফিল্ড সঠিকভাবে পূরণ করুন!');
+      toast.error("Please fill in all fields!");
       return;
     }
 
     setLoading(true);
+
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+      // ১. ইউজার তৈরি করা
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      // ২. ইউজারের ডিসপ্লে নেম সেট করা
+      await updateProfile(userCredential.user, {
+        displayName: formData.name,
       });
 
-      const data = await response.json();
+      // ৩. লোকাল স্টোরেজে তথ্য সেভ করা
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          uid: userCredential.user.uid,
+          name: formData.name, // এখানে আপডেট করা নাম ব্যবহার করা হয়েছে
+          email: formData.email,
+        })
+      );
 
-      if (!response.ok) {
-        throw new Error(data.message || 'সাইনআপ করতে সমস্যা হয়েছে!');
-      }
+      toast.success(`Welcome ${formData.name}! Account created successfully. 🎉`);
+      
+      // ড্যাশবোর্ডে পাঠানো
+      navigate("/");
+      // পেজ রিলোড দিলে AppContext-এর onAuthStateChanged এটি ধরে ফেলবে
+      window.location.reload(); 
 
-      // টোকেন এবং ইউজার ডাটা লোকাল স্টোরেজে সেভ করা
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify({ name: data.name, email: data.email, isPremium: data.isPremium }));
-
-      toast.success(`স্বাগতম ${data.name}! অ্যাকাউন্ট তৈরি সফল হয়েছে। 🎉`);
-      navigate('/'); // ড্যাশবোর্ডে রিডাইরেক্ট
     } catch (error) {
-      toast.error(error.message);
+      console.error(error);
+
+      if (error.code === "auth/email-already-in-use") {
+        toast.error("This email is already registered!");
+      } else if (error.code === "auth/weak-password") {
+        toast.error("Password must be at least 6 characters!");
+      } else if (error.code === "auth/invalid-email") {
+        toast.error("Please enter a valid email!");
+      } else {
+        toast.error("Signup failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -48,7 +83,7 @@ const Signup = () => {
           <h2 className="text-2xl font-black bg-gradient-to-r from-amber-400 to-rose-500 bg-clip-text text-transparent uppercase tracking-wider">
             Create Account
           </h2>
-          <p className="text-xs text-slate-400 mt-2">ToolGrid প্রিমিয়াম ড্যাশবোর্ডে যোগ দিন</p>
+          <p className="text-xs text-slate-400 mt-2">Join the ToolGrid Premium Dashboard</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -56,10 +91,10 @@ const Signup = () => {
             <label className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Full Name</label>
             <input
               type="text"
-              placeholder="Enter Your name..."
+              placeholder="Enter Your Name..."
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-slate-200 outline-none focus:border-amber-500/50 transition font-mono"
+              className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-slate-200 outline-none focus:border-amber-500/50 transition"
             />
           </div>
 
@@ -70,7 +105,7 @@ const Signup = () => {
               placeholder="Enter Your Email..."
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-slate-200 outline-none focus:border-amber-500/50 transition font-mono"
+              className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-slate-200 outline-none focus:border-amber-500/50 transition"
             />
           </div>
 
@@ -81,7 +116,7 @@ const Signup = () => {
               placeholder="••••••••"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-slate-200 outline-none focus:border-amber-500/50 transition font-mono"
+              className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-slate-200 outline-none focus:border-amber-500/50 transition"
             />
           </div>
 
@@ -90,15 +125,13 @@ const Signup = () => {
             disabled={loading}
             className="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-black font-black text-xs uppercase tracking-widest rounded-xl shadow-lg transition duration-300 disabled:opacity-50"
           >
-            {loading ? 'Processing...' : 'Sign Up 🚀'}
+            {loading ? "Processing..." : "Sign Up 🚀"}
           </button>
         </form>
 
         <p className="text-center text-xs text-slate-500 mt-6">
-          অলরেডি অ্যাকাউন্ট আছে?{' '}
-          <Link to="/login" className="text-amber-400 hover:underline">
-            লগইন করুন
-          </Link>
+          Already have an account?{" "}
+          <Link to="/login" className="text-amber-400 hover:underline">Login</Link>
         </p>
       </div>
     </div>

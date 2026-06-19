@@ -1,8 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AnimatePresence } from "framer-motion";
-
 import { AppContext } from "./context/AppContext";
 
 import Sidebar from "./components/Sidebar";
@@ -47,247 +51,252 @@ setSidebarOpen,
 user,
 plan,
 } = useContext(AppContext);
+const navigate = useNavigate();
 
 const location = useLocation();
 
 // Google Analytics Init
 useEffect(() => {
-  initGA();
+  initGA();
 }, []);
 
 // Page Tracking
 useEffect(() => {
-  pageView(location.pathname);
+  pageView(location.pathname);
 }, [location.pathname]);
 
 // Ctrl + K
 useEffect(() => {
-  const handleKey = (e) => {
-    if (e.ctrlKey && e.key === "k") {
-      e.preventDefault();
-      alert("Command Palette (Future Upgrade 🔥)");
-    }
-  };
+  const handleKey = (e) => {
+    if (e.ctrlKey && e.key === "k") {
+      e.preventDefault();
+      alert("Command Palette (Future Upgrade 🔥)");
+    }
+  };
 
-  window.addEventListener("keydown", handleKey);
+  window.addEventListener("keydown", handleKey);
 
-  return () => {
-    window.removeEventListener("keydown", handleKey);
-  };
+  return () => {
+    window.removeEventListener("keydown", handleKey);
+  };
 }, []);
 
 return ( <div className="min-h-screen bg-[#030712] text-white flex">
 
 
-  {/* Sidebar */}
-  <Sidebar />
+  {/* Sidebar */}
+  <Sidebar />
 
-  {/* Main Area */}
-  <div className="flex-1 flex flex-col min-h-screen">
+  {/* Main Area */}
+  <div className="flex-1 flex flex-col min-h-screen">
 
-    {/* Topbar */}
-    <div className="h-14 border-b border-white/5 flex items-center justify-between px-4 bg-black/20 backdrop-blur sticky top-0 z-30">
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="text-sm px-3 py-1 rounded bg-white/5 hover:bg-white/10"
-      >
-        ☰
-      </button>
+    {/* Topbar */}
+    <div className="h-14 border-b border-white/5 flex items-center justify-between px-4 bg-black/20 backdrop-blur sticky top-0 z-30">
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className="text-sm px-3 py-1 rounded bg-white/5 hover:bg-white/10"
+      >
+        ☰
+      </button>
 
-      <div className="text-xs text-slate-400">
-        {user?.email || "Guest"} • {(plan || "free").toUpperCase()}
-      </div>
-    </div>
+      <div className="text-xs text-slate-400">
+        {user?.email || "Guest"} • {(plan || "free").toUpperCase()}
+      </div>
+    </div>
 
-    {/* Content */}
-    <main className="flex-1 overflow-y-auto">
-      <AnimatePresence mode="wait">
-        <PageTransition key={location.pathname}>
-          <Routes location={location}>
+    {/* Content */}
+    <main className="flex-1 overflow-y-auto">
+      <AnimatePresence mode="wait">
+        <PageTransition key={location.pathname}>
+          <Routes location={location}>
 
-            {/* Dashboard */}
-            <Route
-              path="/"
-              element={<Dashboard />}
-            />
-            <Route
-              path="/"
-              element={<Home/>}
-            />
+            {/* Dashboard */}
+            <Route
+              path="/dashboard"
+              element={<Dashboard />}
+            />
+            <Route
+              path="/"
+              element={<Home
+              onLogin={() => navigate('/login')} 
+      onSignup={() => navigate('/signup')}/>}
+            />
+             
+            
 
-            {/* Auth */}
-            <Route
-              path="/login"
-              element={<Login />}
-            />
 
-            <Route
-              path="/signup"
-              element={<Signup />}
-            />
+            {/* Auth */}
+            <Route
+              path="/login"
+              element={<Login />}
+            />
 
-            {/* Protected Tools */}
+            <Route
+              path="/signup"
+              element={<Signup />}
+            />
 
-            <Route
-              path="/duplicate-remover"
-              element={
-                <ProtectedTool>
-                  <DuplicateRemover />
-                </ProtectedTool>
-              }
-            />
+            {/* Protected Tools */}
 
-            <Route
-              path="/favicon-generator"
-              element={
-                <ProtectedTool>
-                  <FaviconGenerator />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/duplicate-remover"
+              element={
+                <ProtectedTool>
+                  <DuplicateRemover />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/find-and-replace"
-              element={
-                <ProtectedTool>
-                  <FindAndReplace />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/favicon-generator"
+              element={
+                <ProtectedTool>
+                  <FaviconGenerator />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/hash-generator"
-              element={
-                <ProtectedTool>
-                  <HashGenerator />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/find-and-replace"
+              element={
+                <ProtectedTool>
+                  <FindAndReplace />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/ip-lookup"
-              element={
-                <ProtectedTool>
-                  <IPLookup />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/hash-generator"
+              element={
+                <ProtectedTool>
+                  <HashGenerator />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/jwt-decoder"
-              element={
-                <ProtectedTool>
-                  <JWTDecoder />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/ip-lookup"
+              element={
+                <ProtectedTool>
+                  <IPLookup />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/password-generator"
-              element={
-                <ProtectedTool>
-                  <PasswordGenerator />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/jwt-decoder"
+              element={
+                <ProtectedTool>
+                  <JWTDecoder />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/password-strength"
-              element={
-                <ProtectedTool>
-                  <PasswordStrengthChecker />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/password-generator"
+              element={
+                <ProtectedTool>
+                  <PasswordGenerator />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/qr-code-generator"
-              element={
-                <ProtectedTool>
-                  <QRCodeGenerator />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/password-strength"
+              element={
+                <ProtectedTool>
+                  <PasswordStrengthChecker />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/qr-scanner"
-              element={
-                <ProtectedTool>
-                  <QRScanner />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/qr-code-generator"
+              element={
+                <ProtectedTool>
+                  <QRCodeGenerator />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/text-to-speech"
-              element={
-                <ProtectedTool>
-                  <TextToSpeech />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/qr-scanner"
+              element={
+                <ProtectedTool>
+                  <QRScanner />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/url-encoder-decoder"
-              element={
-                <ProtectedTool>
-                  <URLEncoderDecoder />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/text-to-speech"
+              element={
+                <ProtectedTool>
+                  <TextToSpeech />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/whois-lookup"
-              element={
-                <ProtectedTool>
-                  <WhoisLookup />
-                </ProtectedTool>
-              }
-            />
+            <Route
+              path="/url-encoder-decoder"
+              element={
+                <ProtectedTool>
+                  <URLEncoderDecoder />
+                </ProtectedTool>
+              }
+            />
 
-            <Route
-              path="/success"
-              element={<Success />}
-            />
+            <Route
+              path="/whois-lookup"
+              element={
+                <ProtectedTool>
+                  <WhoisLookup />
+                </ProtectedTool>
+              }
+            />
 
-            <Route path="/about"
-             element={<About />} 
-             />
+            <Route
+              path="/success"
+              element={<Success />}
+            />
 
-             <Route path="/contact" 
-             element={<Contact />} 
-             />
+            <Route path="/about"
+             element={<About />} 
+             />
 
-             <Route
-             path="/privacy-policy"
-             element={<PrivacyPolicy />}
-            />
+             <Route path="/contact" 
+             element={<Contact />} 
+             />
 
-            <Route path="/terms" 
-              element={<Terms />}
-            />
-            <Route path="/disclaimer" 
-            element={<Disclaimer />}
-             />
+             <Route
+             path="/privacy-policy"
+             element={<PrivacyPolicy />}
+            />
 
-            <Route path="/cookie-policy"
-             element={<CookiePolicy />}
-              />
+            <Route path="/terms" 
+              element={<Terms />}
+            />
+            <Route path="/disclaimer" 
+            element={<Disclaimer />}
+             />
 
-            <Route path="*"
-             element={<NotFound />} 
-             />
+            <Route path="/cookie-policy"
+             element={<CookiePolicy />}
+              />
 
-          </Routes>
-        </PageTransition>
-      </AnimatePresence>
-    </main>
+            <Route path="*"
+             element={<NotFound />} 
+             />
 
-  </div>
+          </Routes>
+        </PageTransition>
+      </AnimatePresence>
+    </main>
+  </div>
 
-  <Toaster position="top-right" />
-  <AIPopup />
-  <CommandPalette />
+  <Toaster position="top-right" />
+  <AIPopup />
+  <CommandPalette />
 </div>
 
 

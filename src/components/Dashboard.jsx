@@ -487,7 +487,9 @@ useEffect(() => {
         ))}
       </div>
 
-    <Footer />
+<Footer />
+
+   
   </>
 );
 };

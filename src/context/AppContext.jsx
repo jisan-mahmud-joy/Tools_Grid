@@ -1,14 +1,16 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useMemo } from "react";
 import axios from "axios";
-
 import { updateToolUsage, fetchAISuggestions } from "../api";
 import { getUserUsage } from "../utils/toolUsage";
+import { auth } from "../firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 export const AppContext = createContext();
 
-const API_BASE_URL = "http://localhost:5000/api/auth";
+const API_BASE = "http://localhost:5000/api";
 
 export const AppProvider = ({ children }) => {
+  // ================= STATES =================
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,254 +19,191 @@ export const AppProvider = ({ children }) => {
   const [aiSuggestions, setAISuggestions] = useState([]);
   const [plan, setPlan] = useState("free");
 
-  // Guest Usage Counter
-  const [guestUsageCount, setGuestUsageCount] = useState(
-    Number(localStorage.getItem("guestUsageCount")) || 0
-  );
+  const [guestUsageCount, setGuestUsageCount] = useState(() => {
+    return Number(localStorage.getItem("guestUsageCount")) || 0;
+  });
 
-  // Auto Login
+  // ================= FIREBASE ONLY AUTH =================
   useEffect(() => {
-    const checkLoggedInUser = async () => {
-      const token = localStorage.getItem("toolgrid_token");
-
-      if (token) {
-        try {
-          const res = await axios.get(`${API_BASE_URL}/me`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (res.data?.success) {
-            setUser(res.data.user);
-            setPlan(res.data.user.plan || "free");
-          } else {
-            localStorage.removeItem("toolgrid_token");
-          }
-        } catch (err) {
-          console.error("Auto-login failed:", err);
-          localStorage.removeItem("toolgrid_token");
-        }
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUser({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email || "",
+          name: firebaseUser.displayName || "User",
+          source: "firebase",
+        });
+      } else {
+        setUser(null);
       }
 
       setLoading(false);
-    };
+    });
 
-    checkLoggedInUser();
+    return () => unsubscribe();
   }, []);
 
-  // Login
-  
+  // ================= LOGIN (BACKEND) =================
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API_BASE_URL}/login`, {
+      const res = await axios.post(`${API_BASE}/auth/login`, {
         email,
         password,
       });
 
       if (res.data?.success) {
-        setUser(res.data.user);
-        setPlan(res.data.user.plan || "free");
+        const u = res.data.user;
 
-        localStorage.setItem(
-          "toolgrid_token",
-          res.data.token
-        );
+        setUser({
+          ...u,
+          source: "backend",
+        });
+
+        setPlan(u.plan || "free");
+        localStorage.setItem("toolgrid_token", res.data.token);
 
         resetGuestUsage();
 
-        return {
-          success: true,
-        };
+        return { success: true };
       }
 
-      return {
-        success: false,
-        message: res.data.message,
-      };
+      return { success: false, message: res.data.message };
     } catch (err) {
       return {
         success: false,
-        message:
-          err.response?.data?.message ||
-          "Login failed. Please try again.",
+        message: err.response?.data?.message || "Login failed",
       };
     }
   };
 
-  // Signup
+  // ================= SIGNUP =================
   const signup = async (name, email, password) => {
     try {
-      const res = await axios.post(
-        `${API_BASE_URL}/register`,
-        {
-          name,
-          email,
-          password,
-        }
-      );
+      const res = await axios.post(`${API_BASE}/auth/register`, {
+        name,
+        email,
+        password,
+      });
 
       if (res.data?.success) {
         resetGuestUsage();
-
-        return {
-          success: true,
-        };
+        return { success: true };
       }
 
-      return {
-        success: false,
-        message: res.data.message,
-      };
+      return { success: false, message: res.data.message };
     } catch (err) {
       return {
         success: false,
-        message:
-          err.response?.data?.message ||
-          "Signup failed. Please try again.",
+        message: err.response?.data?.message || "Signup failed",
       };
     }
   };
 
-  // Logout
-  const logout = () => {
-    setUser(null);
-    setPlan("free");
-    setView("dashboard");
-
-    localStorage.removeItem("toolgrid_token");
-
-    resetGuestUsage();
+  // ================= LOGOUT =================
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setPlan("free");
+      localStorage.removeItem("toolgrid_token");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // Guest Usage
+  // ================= GUEST USAGE =================
   const incrementGuestUsage = () => {
-    const newCount = guestUsageCount + 1;
-
-    setGuestUsageCount(newCount);
-
-    localStorage.setItem(
-      "guestUsageCount",
-      newCount.toString()
-    );
+    setGuestUsageCount((prev) => {
+      const newCount = prev + 1;
+      localStorage.setItem("guestUsageCount", String(newCount));
+      return newCount;
+    });
   };
 
   const resetGuestUsage = () => {
     setGuestUsageCount(0);
-
-    localStorage.removeItem(
-      "guestUsageCount"
-    );
+    localStorage.removeItem("guestUsageCount");
   };
 
-  // Can Use Tool?
-  const canUseTool =
-    !!user || guestUsageCount < 3;
+  // ================= TOOL ACCESS (FIXED CORE) =================
+  const canUseTool = useMemo(() => {
+    const isLoggedIn = Boolean(user?.uid || user?.email);
+    return isLoggedIn || guestUsageCount < 3;
+  }, [user, guestUsageCount]);
 
-  // Tool Usage API
+  // ================= TOOL USAGE =================
   const useTool = async (toolId) => {
     if (!user?.email) return null;
 
     try {
-      const data = await updateToolUsage(
-        user.email,
-        toolId
-      );
-
-      return data;
+      return await updateToolUsage(user.email, toolId);
     } catch (err) {
-      console.error(
-        "Tool usage update failed:",
-        err
-      );
-
+      console.error(err);
       return null;
     }
   };
 
-  // Tool Limit Check
   const checkToolLimit = (toolId) => {
-    if (!user?.email) {
-      return guestUsageCount < 3;
-    }
+    if (!user?.email) return guestUsageCount < 3;
 
-    const usage = getUserUsage(
-      user.email
-    );
+    const usage = getUserUsage(user.email);
+    const count = usage?.[toolId] || 0;
 
-    const count = usage[toolId] || 0;
+    const limit = plan === "pro" ? Infinity : 10;
 
-    return count < 999999;
+    return count < limit;
   };
 
-  // AI Suggestions
+  // ================= AI =================
   const loadAISuggestions = async () => {
     if (!user?.email) return;
 
     try {
-      const suggestions =
-        await fetchAISuggestions(
-          user.email
-        );
-
-      setAISuggestions(
-        suggestions || []
-      );
+      const res = await fetchAISuggestions(user.email);
+      setAISuggestions(res || []);
     } catch (err) {
-      console.error(
-        "Failed to load AI suggestions:",
-        err
-      );
+      console.error(err);
     }
   };
 
+  // ================= CONTEXT =================
   const value = {
-    // Navigation
     view,
     setView,
 
-    // Sidebar
     sidebarOpen,
     setSidebarOpen,
 
-    // User
-    user,
-    setUser,
-
-    // Plan
-    plan,
-    setPlan,
-
-    // Loading
-    loading,
-
-    // Theme
     theme,
     setTheme,
 
-    // Auth
+    user,
+    setUser,
+
+    plan,
+    setPlan,
+
+    loading,
+
     login,
     signup,
     logout,
 
-    // Tools
     useTool,
     checkToolLimit,
 
-    // Guest Limit
     guestUsageCount,
     incrementGuestUsage,
     resetGuestUsage,
     canUseTool,
 
-    // AI
     aiSuggestions,
     loadAISuggestions,
   };
 
   return (
     <AppContext.Provider value={value}>
-      {!loading && children}
+      {loading ? <div>Loading...</div> : children}
     </AppContext.Provider>
   );
 };
