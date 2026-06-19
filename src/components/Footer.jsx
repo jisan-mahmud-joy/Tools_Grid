@@ -91,13 +91,11 @@ const Footer = () => {
             </h3>
 
             <ul className="space-y-3 text-sm text-slate-400">
-
-              <li>
-                <Link to="/Home" className="hover:text-cyan-400">
-                  Home
-                </Link>
-              </li>
-
+            <li>
+              <Link to="/" className="hover:text-cyan-400">
+                Home
+              </Link>
+            </li>
               <li>
                 <Link to="/dashboard" className="hover:text-cyan-400">
                   Dashboard
@@ -185,7 +183,7 @@ const Footer = () => {
                 </li>
               <li>
                 <Link
-                  to="/ QR-Scanner"
+                  to="/qr-scanner"
                   className="hover:text-cyan-400"
                 >
                   QR Scanner
