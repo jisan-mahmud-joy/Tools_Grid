@@ -158,12 +158,56 @@ const Footer = () => {
 
             <ul className="space-y-3 text-sm text-slate-400">
 
-              <li>JWT Decoder</li>
-              <li>Hash Generator</li>
-              <li>IP Lookup</li>
-              <li>QR Scanner</li>
-              <li>Text To Speech</li>
-              <li>URL Encoder</li>
+              <li>
+                <Link
+                  to="/JWT-Decoder"
+                  className="hover:text-cyan-400"
+                >
+                  JWT Decoder
+                </Link>
+                </li>
+              <li>
+                <Link
+                  to="/Hash-Generator"
+                  className="hover:text-cyan-400"
+                >
+              Hash Generator
+                  
+                </Link>
+                </li>
+              <li>
+                <Link
+                  to="/IP-Lookup"
+                  className="hover:text-cyan-400"
+                >
+                  IP Lookup
+                </Link>
+                </li>
+              <li>
+                <Link
+                  to="/ QR-Scanner"
+                  className="hover:text-cyan-400"
+                >
+                  QR Scanner
+                </Link>
+                </li>
+              <li>
+                <Link
+                  to="/Text-To-Speech"
+                  className="hover:text-cyan-400"
+                >
+                  Text To Speech
+                </Link>
+                </li>
+              <li>
+                <Link
+                  to="/ URL-Encoder"
+                  className="hover:text-cyan-400"
+                >
+                  URL Encoder
+                </Link>
+                </li>
+             
 
             </ul>
           </div>
