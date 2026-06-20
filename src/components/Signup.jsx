@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
-
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase";
 
 const Signup = () => {
@@ -22,24 +17,45 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.password) {
+    // ================= VALIDATION =================
+    const nameTrimmed = formData.name.trim();
+    const emailTrimmed = formData.email.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!nameTrimmed || !emailTrimmed || !formData.password) {
       toast.error("Please fill in all fields!");
       return;
     }
 
+    if (nameTrimmed.length < 3) {
+      toast.error("Name must be at least 3 characters long!");
+      return;
+    }
+
+    if (!emailRegex.test(emailTrimmed)) {
+      toast.error("Please enter a valid email address!");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters!");
+      return;
+    }
+
+    // ================= SIGNUP LOGIC =================
     setLoading(true);
 
     try {
       // ১. ইউজার তৈরি করা
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        formData.email,
+        emailTrimmed,
         formData.password
       );
 
       // ২. ইউজারের ডিসপ্লে নেম সেট করা
       await updateProfile(userCredential.user, {
-        displayName: formData.name,
+        displayName: nameTrimmed,
       });
 
       // ৩. লোকাল স্টোরেজে তথ্য সেভ করা
@@ -47,29 +63,33 @@ const Signup = () => {
         "user",
         JSON.stringify({
           uid: userCredential.user.uid,
-          name: formData.name, // এখানে আপডেট করা নাম ব্যবহার করা হয়েছে
-          email: formData.email,
+          name: nameTrimmed,
+          email: emailTrimmed,
         })
       );
 
-      toast.success(`Welcome ${formData.name}! Account created successfully. 🎉`);
+      toast.success(`Welcome ${nameTrimmed}! Account created successfully. 🎉`);
       
       // ড্যাশবোর্ডে পাঠানো
       navigate("/");
-      // পেজ রিলোড দিলে AppContext-এর onAuthStateChanged এটি ধরে ফেলবে
       window.location.reload(); 
 
     } catch (error) {
       console.error(error);
 
-      if (error.code === "auth/email-already-in-use") {
-        toast.error("This email is already registered!");
-      } else if (error.code === "auth/weak-password") {
-        toast.error("Password must be at least 6 characters!");
-      } else if (error.code === "auth/invalid-email") {
-        toast.error("Please enter a valid email!");
-      } else {
-        toast.error("Signup failed. Please try again.");
+      // Firebase Error Handling
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          toast.error("This email is already registered!");
+          break;
+        case "auth/weak-password":
+          toast.error("Password should be at least 6 characters.");
+          break;
+        case "auth/invalid-email":
+          toast.error("Invalid email address.");
+          break;
+        default:
+          toast.error("Signup failed. Please try again.");
       }
     } finally {
       setLoading(false);

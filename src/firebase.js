@@ -1,17 +1,17 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth"; // auth ইমপোর্ট করো
+import { getAuth } from "firebase/auth"; 
 
-// Your web app's Firebase configuration
+// Your web app's Firebase configuration using Vite format
 const firebaseConfig = {
-  apiKey: "AIzaSyBoqZRwrmMnpQAESQKhwJX4bG-ZyEua-ik",
-  authDomain: "tool-grid-19d3c.firebaseapp.com",
-  projectId: "tool-grid-19d3c",
-  storageBucket: "tool-grid-19d3c.firebasestorage.app",
-  messagingSenderId: "54569459916",
-  appId: "1:54569459916:web:af3c24f2712f7ad31d2269",
-  measurementId: "G-1LK556TZV3"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase

@@ -8,6 +8,7 @@ import {
 import { Toaster } from "react-hot-toast";
 import { AnimatePresence } from "framer-motion";
 import { AppContext } from "./context/AppContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/Dashboard";
@@ -111,10 +112,14 @@ return ( <div className="min-h-screen bg-[#030712] text-white flex">
           <Routes location={location}>
 
             {/* Dashboard */}
-            <Route
-              path="/dashboard"
-              element={<Dashboard />}
-            />
+            <Route 
+               path="/dashboard" 
+                element={
+             <ProtectedRoute>
+                 <Dashboard />
+             </ProtectedRoute>
+               } 
+            />
             <Route
               path="/"
               element={<Home
