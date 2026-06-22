@@ -1,22 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { AppContext } from "../context/AppContext";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
+  const { login } = useContext(AppContext);
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // ================= VALIDATION =================
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const trimmedEmail = formData.email.trim();
 
@@ -30,54 +25,19 @@ const Login = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
-      toast.error("Password must be at least 6 characters long!");
-      return;
-    }
-
-    // ================= AUTH LOGIC =================
     setLoading(true);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        trimmedEmail,
-        formData.password
-      );
-
-      const user = userCredential.user;
-
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          uid: user.uid,
-          email: user.email,
-          name: user.displayName || "User",
-        })
-      );
-
-      toast.success("Log in successfully! 🔓");
-      navigate("/");
+      const res = await login(trimmedEmail, formData.password);
+      if (res?.success) {
+        toast.success("Log in successfully! 🔓");
+        navigate("/");
+      } else {
+        toast.error(res?.message || "Login failed.");
+      }
     } catch (error) {
       console.error(error);
-
-      // Firebase Error Handling
-      switch (error.code) {
-        case "auth/user-not-found":
-          toast.error("No account found with this email.");
-          break;
-        case "auth/wrong-password":
-          toast.error("Incorrect password.");
-          break;
-        case "auth/invalid-credential":
-          toast.error("Invalid email or password.");
-          break;
-        case "auth/too-many-requests":
-          toast.error("Too many attempts. Try again later.");
-          break;
-        default:
-          toast.error("Login failed. Please try again.");
-      }
+      toast.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -104,6 +64,7 @@ const Login = () => {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-slate-200 outline-none focus:border-emerald-500/50 transition"
+              required
             />
           </div>
 
@@ -117,6 +78,7 @@ const Login = () => {
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-slate-200 outline-none focus:border-emerald-500/50 transition"
+              required
             />
           </div>
 

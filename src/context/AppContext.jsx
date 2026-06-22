@@ -3,7 +3,14 @@ import axios from "axios";
 import { updateToolUsage, fetchAISuggestions } from "../api";
 import { getUserUsage } from "../utils/toolUsage";
 import { auth } from "../firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { 
+  onAuthStateChanged, 
+  signOut, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  sendEmailVerification,
+  updateProfile 
+} from "firebase/auth";
 
 export const AppContext = createContext();
 
@@ -23,79 +30,107 @@ export const AppProvider = ({ children }) => {
     return Number(localStorage.getItem("guestUsageCount")) || 0;
   });
 
-  // ================= FIREBASE ONLY AUTH =================
+  // ================= FIREBASE AUTH OBSERVER =================
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        setUser({
-          uid: firebaseUser.uid,
-          email: firebaseUser.email || "",
-          name: firebaseUser.displayName || "User",
-          source: "firebase",
-        });
+        // জিমেইল ভেরিফাইড হলেই কেবল অ্যাপে এক্সেস দেওয়া হবে
+        if (firebaseUser.emailVerified) {
+          setUser({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email || "",
+            name: firebaseUser.displayName || "User",
+            source: "firebase",
+          });
+          
+          // ব্যাকএন্ডে সেশন সিঙ্ক বা টোকেন জেনারেট করার জন্য কল (ঐচ্ছিক)
+          try {
+            const res = await axios.post(`${API_BASE}/auth/sync-user`, {
+              uid: firebaseUser.uid,
+              email: firebaseUser.email,
+              name: firebaseUser.displayName
+            });
+            if (res.data?.token) {
+              localStorage.setItem("toolgrid_token", res.data.token);
+            }
+          } catch (err) {
+            console.error("Backend sync failed", err);
+          }
+        } else {
+          // ইমেইল ভেরিফাইড না হলে স্টেট ক্লিন রাখা হবে
+          setUser(null);
+        }
       } else {
         setUser(null);
       }
-
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  // ================= LOGIN (BACKEND) =================
+  // ================= LOGIN WITH VERIFICATION CHECK =================
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API_BASE}/auth/login`, {
-        email,
-        password,
-      });
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const u = userCredential.user;
 
-      if (res.data?.success) {
-        const u = res.data.user;
-
-        setUser({
-          ...u,
-          source: "backend",
-        });
-
-        setPlan(u.plan || "free");
-        localStorage.setItem("toolgrid_token", res.data.token);
-
-        resetGuestUsage();
-
-        return { success: true };
+      // যদি জিমেইল ভেরিফাই না করে থাকে
+      if (!u.emailVerified) {
+        await signOut(auth); // তাকে সেশন থেকে বের করে দেওয়া হবে
+        return { 
+          success: false, 
+          message: "Please verify your email address. Check your inbox or spam folder!" 
+        };
       }
 
-      return { success: false, message: res.data.message };
+      setUser({
+        uid: u.uid,
+        email: u.email || "",
+        name: u.displayName || "User",
+        source: "firebase",
+      });
+
+      resetGuestUsage();
+      return { success: true };
     } catch (err) {
-      return {
-        success: false,
-        message: err.response?.data?.message || "Login failed",
-      };
+      let msg = "Login failed";
+      if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
+        msg = "Invalid email or password.";
+      } else if (err.code === "auth/too-many-requests") {
+        msg = "Too many attempts. Try again later.";
+      }
+      return { success: false, message: msg };
     }
   };
 
-  // ================= SIGNUP =================
+  // ================= SIGNUP WITH VERIFICATION LINK =================
   const signup = async (name, email, password) => {
     try {
-      const res = await axios.post(`${API_BASE}/auth/register`, {
-        name,
-        email,
-        password,
+      // ১. ফায়ারবেসে ইউজার তৈরি
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // ২. প্রোফাইলে নাম সেট করা
+      await updateProfile(userCredential.user, {
+        displayName: name,
       });
 
-      if (res.data?.success) {
-        resetGuestUsage();
-        return { success: true };
-      }
+      // ৩. আসল জিমেইলে ভেরিফিকেশন লিংক পাঠানো
+      await sendEmailVerification(userCredential.user);
 
-      return { success: false, message: res.data.message };
+      // অ্যাকাউন্ট খোলার সাথে সাথে ফায়ারবেস লগইন করায়, কিন্তু লিংক ভেরিফাই না করা পর্যন্ত লগআউট করিয়ে রাখা হবে
+      await signOut(auth);
+
+      resetGuestUsage();
+      return { success: true, message: "Verification link sent! Please check your Gmail." };
     } catch (err) {
-      return {
-        success: false,
-        message: err.response?.data?.message || "Signup failed",
-      };
+      let msg = "Signup failed";
+      if (err.code === "auth/email-already-in-use") {
+        msg = "This email is already registered!";
+      } else if (err.code === "auth/weak-password") {
+        msg = "Password should be at least 6 characters.";
+      }
+      return { success: false, message: msg };
     }
   };
 
@@ -106,6 +141,7 @@ export const AppProvider = ({ children }) => {
       setUser(null);
       setPlan("free");
       localStorage.removeItem("toolgrid_token");
+      localStorage.removeItem("user");
     } catch (err) {
       console.error(err);
     }
@@ -125,7 +161,7 @@ export const AppProvider = ({ children }) => {
     localStorage.removeItem("guestUsageCount");
   };
 
-  // ================= TOOL ACCESS (FIXED CORE) =================
+  // ================= TOOL ACCESS =================
   const canUseTool = useMemo(() => {
     const isLoggedIn = Boolean(user?.uid || user?.email);
     return isLoggedIn || guestUsageCount < 3;
@@ -134,7 +170,6 @@ export const AppProvider = ({ children }) => {
   // ================= TOOL USAGE =================
   const useTool = async (toolId) => {
     if (!user?.email) return null;
-
     try {
       return await updateToolUsage(user.email, toolId);
     } catch (err) {
@@ -145,19 +180,15 @@ export const AppProvider = ({ children }) => {
 
   const checkToolLimit = (toolId) => {
     if (!user?.email) return guestUsageCount < 3;
-
     const usage = getUserUsage(user.email);
     const count = usage?.[toolId] || 0;
-
     const limit = plan === "pro" ? Infinity : 10;
-
     return count < limit;
   };
 
   // ================= AI =================
   const loadAISuggestions = async () => {
     if (!user?.email) return;
-
     try {
       const res = await fetchAISuggestions(user.email);
       setAISuggestions(res || []);
@@ -166,44 +197,35 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // ================= CONTEXT =================
+  // ================= CONTEXT VALUE =================
   const value = {
     view,
     setView,
-
     sidebarOpen,
     setSidebarOpen,
-
     theme,
     setTheme,
-
     user,
     setUser,
-
     plan,
     setPlan,
-
     loading,
-
     login,
     signup,
     logout,
-
     useTool,
     checkToolLimit,
-
     guestUsageCount,
     incrementGuestUsage,
     resetGuestUsage,
     canUseTool,
-
     aiSuggestions,
     loadAISuggestions,
   };
 
   return (
     <AppContext.Provider value={value}>
-      {loading ? <div>Loading...</div> : children}
+      {loading ? <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">Loading Workspace...</div> : children}
     </AppContext.Provider>
   );
 };
