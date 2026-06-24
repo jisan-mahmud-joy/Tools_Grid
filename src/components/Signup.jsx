@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { auth } from "./firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+
 
 const Signup = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
