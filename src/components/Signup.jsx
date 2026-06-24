@@ -1,37 +1,37 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-
+import { AppContext } from "../context/AppContext";
 
 const Signup = () => {
+  const { signup } = useContext(AppContext);
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [isSent, setIsSent] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // ✅ এখানে Firebase directly call করুন
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
+      const res = await signup(
+        formData.name.trim(),
         formData.email.trim(),
         formData.password
       );
-      console.log("Success:", userCredential.user);
-      toast.success("Account created! ✅");
-      setIsSent(true);
+      if (res?.success) {
+        toast.success("Verification link sent! Check your Gmail ✉️", { duration: 6000 });
+        setIsSent(true);
+      } else {
+        toast.error(res?.message || "Signup failed.");
+      }
     } catch (error) {
-      console.error(error.code, error.message);
-      toast.error(error.message);
+      toast.error("Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ইমেল সাকসেসফুলি চলে গেলে এই স্ক্রিনটি দেখাবে
   if (isSent) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center p-4">
@@ -39,7 +39,8 @@ const Signup = () => {
           <div className="text-4xl mb-4">✉️</div>
           <h2 className="text-xl font-bold text-white mb-2">Verify your Email</h2>
           <p className="text-sm text-slate-400 mb-6">
-            We have sent a verification link to <span className="text-amber-400 font-semibold">{formData.email}</span>. Please click the link to activate your account.
+            We have sent a verification link to{" "}
+            <span className="text-amber-400 font-semibold">{formData.email}</span>.
           </p>
           <Link to="/login" className="inline-block px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-500 text-black font-bold text-xs uppercase tracking-wider rounded-xl hover:opacity-90 transition">
             Go to Login
