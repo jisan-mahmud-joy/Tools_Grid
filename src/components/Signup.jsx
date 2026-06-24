@@ -1,55 +1,32 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { AppContext } from "../context/AppContext";
+import { auth } from "./firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Signup = () => {
-  const { signup } = useContext(AppContext);
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [isSent, setIsSent] = useState(false); // ইমেল পাঠানো হয়েছে কিনা ট্র্যাকিং
+  const [isSent, setIsSent] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const nameTrimmed = formData.name.trim();
-    const emailTrimmed = formData.email.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!nameTrimmed || !emailTrimmed || !formData.password) {
-      toast.error("Please fill in all fields!");
-      return;
-    }
-
-    if (nameTrimmed.length < 3) {
-      toast.error("Name must be at least 3 characters long!");
-      return;
-    }
-
-    if (!emailRegex.test(emailTrimmed)) {
-      toast.error("Please enter a valid email address!");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      toast.error("Password must be at least 6 characters!");
-      return;
-    }
-
     setLoading(true);
 
     try {
-      const res = await signup(nameTrimmed, emailTrimmed, formData.password);
-      if (res?.success) {
-        toast.success("Verification link sent! Check your Gmail inbox/spam. ✉️", { duration: 6000 });
-        setIsSent(true);
-      } else {
-        toast.error(res?.message || "Signup failed.");
-      }
+      // ✅ এখানে Firebase directly call করুন
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email.trim(),
+        formData.password
+      );
+      console.log("Success:", userCredential.user);
+      toast.success("Account created! ✅");
+      setIsSent(true);
     } catch (error) {
-      console.error(error);
-      toast.error("Signup failed. Please try again.");
+      console.error(error.code, error.message);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
